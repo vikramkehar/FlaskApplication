@@ -4,6 +4,7 @@ from models import db
 from user_blueprint import user_blueprint
 from flask_cors import CORS
 
+print("hi")
 app = Flask(__name__)
 CORS(app)
 
