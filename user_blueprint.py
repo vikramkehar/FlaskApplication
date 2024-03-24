@@ -73,44 +73,28 @@ def update_user(user_id):
         return jsonify({'error': 'User not found'}), 404
 
     data = request.json
+    print(data)
     user.username = data.get('username', user.username)
     user.email = data.get('email', user.email)
     user.first_name = data.get('first_name', user.first_name)
     user.last_name = data.get('last_name', user.last_name)
     user.date_of_birth = data.get('date_of_birth', user.date_of_birth)
+    user.projectid = data.get('project_name', user.projectid)
 
     db.session.commit()
     return jsonify({'message': 'User updated successfully'})
 
 @user_blueprint.route('/deleteuser/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
+    print(user_id)
     user = User.query.get(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
-
-    for project in user.projects:
-        db.session.delete(project)
 
 
     db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'User deleted successfully'})
-
-
-
-
-@user_blueprint.route('/add-project', methods=['POST'])
-def create_project():
-    data = request.json
-    username = data.get('username')
-    alloted_date = data.get('alloted_date')
-
-    if not username or not alloted_date:
-        return jsonify({'error': 'Missing required fields'}), 400
-
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
 
 
 @user_blueprint.route('/projectlist', methods=['GET'])
